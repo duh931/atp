@@ -1,0 +1,32 @@
+name: 'FCN'
+
+input: 'data'
+input_dim: 1
+input_dim: 3
+input_dim: 500
+input_dim: 500
+force_backward: true
+
+layers { bottom: 'data' top: 'conv1_1' name: 'conv1_1' type: CONVOLUTION
+  blobs_lr: 1 blobs_lr: 2 weight_decay: 1 weight_decay: 0
+  convolution_param { engine: CAFFE num_output: 64 pad: 100 kernel_size: 3 } }
+layers { bottom: 'conv1_1' top: 'conv1_1' name: 'relu1_1' type: RELU }
+layers { bottom: 'conv1_1' top: 'conv1_2' name: 'conv1_2' type: CONVOLUTION
+  blobs_lr: 1 blobs_lr: 2 weight_decay: 1 weight_decay: 0
+  convolution_param { engine: CAFFE num_output: 64 pad: 1 kernel_size: 3 } }
+layers { bottom: 'conv1_2' top: 'conv1_2' name: 'relu1_2' type: RELU }
+layers { name: 'pool1' bottom: 'conv1_2' top: 'pool1' type: POOLING
+  pooling_param { pool: MAX kernel_size: 2 stride: 2 } }
+
+layers { name: 'score-fr' type: CONVOLUTION bottom: 'pool1' top: 'score'
+  blobs_lr: 1 blobs_lr: 2 weight_decay: 1 weight_decay: 0
+  convolution_param { engine: CAFFE num_output: 21 kernel_size: 1 } }
+
+
+
+layers { type: DECONVOLUTION name: 'upsample'
+  bottom: 'score' top: 'bigscore'
+  blobs_lr: 0
+  convolution_param { bias_term: false num_output: 21 kernel_size: 16 stride: 8 } }
+
+

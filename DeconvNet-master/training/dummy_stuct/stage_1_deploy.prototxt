@@ -1,0 +1,19 @@
+name: "stage_1_deploy"
+
+input: "data"
+input_dim: 1
+input_dim: 3
+input_dim: 20
+input_dim: 20
+
+# 224 x 224
+# conv1_1
+layers {  bottom: "data"  top: "seg-score"  name: "conv1_1"  type: CONVOLUTION
+  blobs_lr: 1 blobs_lr: 2 weight_decay: 1 weight_decay: 0
+  convolution_param {    num_output: 30    pad: 1    kernel_size: 3  }}
+
+
+
+
+
+

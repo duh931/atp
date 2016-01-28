@@ -1,0 +1,15 @@
+net: "/home/team76/deconv/DeconvNet-master/training/dummy_stuct/train_our.prototxt"
+base_lr: 0.01
+lr_policy: "inv"
+gamma: 0.001
+power: 0.75
+iter_size: 8
+display: 100
+max_iter: 10000
+momentum: 0.9
+weight_decay: 0.0005
+test_interval: 1000
+test_iter: 10
+snapshot: 1000
+snapshot_prefix: "/home/team76/deconv/DeconvNet-master/training/dummy_stuct/20size_test2"
+solver_mode: GPU

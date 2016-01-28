@@ -1,0 +1,73 @@
+name: "stage_1_training"
+
+layers {
+  name: "data"
+  type: IMAGE_SEG_DATA
+  top: "data"
+  top: "seg-label"
+  image_data_param {
+    root_folder: "/home/team76/deconv/DeconvNet-master/data/VOC2012"
+    source: "/home/team76/deconv/DeconvNet-master/data/imagesets/stage_1_train_imgset/train.txt"
+    label_type: PIXEL
+    batch_size: 8
+    shuffle: true
+    new_width: 500
+    new_height: 500
+  }
+  transform_param {
+    mirror: true
+  }
+  include: { phase: TRAIN }
+}
+layers {
+  name: "data"
+  type: IMAGE_SEG_DATA
+  top: "data"
+  top: "seg-label"
+  image_data_param {
+    root_folder: "/home/team76/deconv/DeconvNet-master/data/VOC2012"
+    source: "/home/team76/deconv/DeconvNet-master/data/imagesets/stage_1_train_imgset/val.txt"
+    label_type: PIXEL
+    batch_size: 8
+    shuffle: true
+    new_width: 500
+    new_height: 500
+  }
+  transform_param {
+    mirror: true
+  }
+  include: { phase: TEST }
+}
+
+# 224 x 224
+# conv1_1
+layers {  bottom: "data"  top: "seg-score"  name: "conv1_1"  type: CONVOLUTION
+  blobs_lr: 1 blobs_lr: 2 weight_decay: 1 weight_decay: 0
+  convolution_param {    num_output: 10    pad: 1    kernel_size: 3  }}
+
+
+
+# score and accuracy
+layers {
+  name: "seg-accuracy"
+  type: ELTWISE_ACCURACY
+  bottom: "seg-score"
+  bottom: "seg-label"
+  top: "seg-accuracy"
+  eltwise_accuracy_param {
+    ignore_label: 255
+  }
+  include: { phase: TEST }
+}
+
+layers {
+  name: "seg-loss"
+  type: SOFTMAX_LOSS
+  bottom: "seg-score"
+  bottom: "seg-label"
+  top: "seg-loss"
+  loss_param {
+    ignore_label: 255
+  }
+}
+
